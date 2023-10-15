@@ -1,20 +1,23 @@
-import React from "react";
-import { NavLink,Link, Outlet, useLoaderData } from "react-router-dom";
+import React, { Suspense } from "react";
+import { NavLink, Link, Outlet, useLoaderData, defer, Await } from "react-router-dom";
 import { getSingleHostBoat } from "../../api";
 import { authRequired } from "../../utils";
 
 export async function loader({ params, request }) {
     await authRequired(request)
     const id = params.id
-    return getSingleHostBoat(id)
+    const hostBoatPromise = await getSingleHostBoat(id)
+    return defer({ hostBoat: hostBoatPromise })
 }
 
 export default function HostBoatDetails() {
-    const data = useLoaderData()
-    const hostBoat = data[0]
+    const dataPromise = useLoaderData()
 
-    return (
-        <div className="host--boat--details--page">
+
+    function renderHostBoat(data) {
+        const hostBoat = data[0]
+
+        return (
             <div className="host--boat--details--container">
                 <Link
                     to={`..`}
@@ -48,6 +51,16 @@ export default function HostBoatDetails() {
                     <Outlet context={hostBoat} />
                 </div>
             </div>
+        )
+    }
+
+    return (
+        <div className="host--boat--details--page">
+            <Suspense fallback={<h1>Loading...</h1>}>
+                <Await resolve={dataPromise.hostBoat}>
+                    {renderHostBoat}
+                </Await>
+            </Suspense>
         </div>
     )
 }
