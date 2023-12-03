@@ -1,5 +1,15 @@
 export async function getBoats() {
-    
+    const res = await fetch("http://localhost:3000/api/yatchs")
+    const data = await res.json()
+    if (!res.ok) {
+        throw {
+            message: data.message,
+            status: res.status,
+            statusText : res.statusText
+        }
+    }
+
+    return data
 }
 
 export async function getSigleBoat(id) {
