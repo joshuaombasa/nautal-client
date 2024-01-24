@@ -18,7 +18,7 @@ export default function HostBoats() {
     function rendeHostBoats(hostBoats) {
 
         const hostBoatElements = hostBoats.map(boat => (
-            <HostBoatItem key={boat.id} boat={boat} />
+            <HostBoatItem key={boat._id} boat={boat} />
         ))
 
         return (
