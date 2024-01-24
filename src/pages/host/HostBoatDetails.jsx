@@ -15,7 +15,7 @@ export default function HostBoatDetails() {
 
 
     function renderHostBoat(data) {
-        const hostBoat = data[0]
+        const hostBoat = data
 
         return (
             <div className="host--boat--details--container">
